@@ -88,15 +88,23 @@ public class AuthController {
 
         ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
 
+        UserInfoResponse userInfoResponse = new UserInfoResponse(
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEnable(),
+                userDetails.getAccount_non_lock(),
+                roles
+        );
+
+        // add information of jwtCookie into userInfoResponse
+        userInfoResponse.setJwtCookieValue(jwtCookie.getValue());
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
-                .body(new UserInfoResponse(userDetails.getId(),
-                        userDetails.getUsername(),
-                        userDetails.getEnable(),
-                        userDetails.getAccount_non_lock(),
-                        roles));
+                .body(userInfoResponse);
     }
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {

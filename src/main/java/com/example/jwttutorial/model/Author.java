@@ -17,13 +17,13 @@ public class Author {
     @Column(name = "version", length = 10, columnDefinition = "number(10)")
     private Integer version;
 
-    @Column(name = "last_name", length = 255)
-    private String last_name;
+    @Column
+    private String lastName;
 
-    @Column(name = "first_name", length = 255)
-    private String first_name;
+    @Column
+    private String firstName;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "publication_author",
             joinColumns = {
             @JoinColumn(name = "author_id", referencedColumnName = "id")
@@ -37,12 +37,10 @@ public class Author {
     public Author() {
     }
 
-    public Author(Long id, Integer version, String last_name, String first_name, Set<Publication> publications) {
-        this.id = id;
+    public Author(Integer version, String lastName, String firstName) {
         this.version = version;
-        this.last_name = last_name;
-        this.first_name = first_name;
-        this.publications = publications;
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
 
     public Long getId() {
@@ -61,20 +59,20 @@ public class Author {
         this.version = version;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public Set<Publication> getPublications() {

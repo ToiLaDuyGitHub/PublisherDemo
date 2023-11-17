@@ -3,6 +3,7 @@ package com.example.jwttutorial.services;
 import com.example.jwttutorial.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,8 @@ public class UserDetailsImpl implements UserDetails {
     private Integer account_non_lock;
 
     private Collection<? extends GrantedAuthority> authorities;
+
+    private ResponseCookie jwtCookie;
 
     public UserDetailsImpl(Long id, String username, String password, Integer enable,
                            Integer account_non_lock, Collection<? extends GrantedAuthority> authorities) {
@@ -123,6 +126,14 @@ public class UserDetailsImpl implements UserDetails {
 
     public void setAccount_non_lock(Integer account_non_lock) {
         this.account_non_lock = account_non_lock;
+    }
+
+    public ResponseCookie getJwtCookie() {
+        return jwtCookie;
+    }
+
+    public void setJwtCookie(ResponseCookie jwtCookie) {
+        this.jwtCookie = jwtCookie;
     }
 
     @Override

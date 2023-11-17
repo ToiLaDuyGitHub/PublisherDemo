@@ -25,7 +25,7 @@ public class Publication {
     @Column(name = "publishing_date", columnDefinition = "date")
     private LocalDate publishing_date;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "Publication_Author", joinColumns = {
             @JoinColumn(name = "publication_id", referencedColumnName = "id")
     }, inverseJoinColumns = {

@@ -12,6 +12,8 @@ public class UserInfoResponse {
     private Integer account_non_lock;
     private List<String> roles;
 
+    private String jwtCookieValue;
+
     public UserInfoResponse() {
 
     }
@@ -62,5 +64,13 @@ public class UserInfoResponse {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getJwtCookieValue() {
+        return jwtCookieValue;
+    }
+
+    public void setJwtCookieValue(String jwtCookieValue) {
+        this.jwtCookieValue = jwtCookieValue;
     }
 }
