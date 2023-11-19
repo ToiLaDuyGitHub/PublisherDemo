@@ -2,20 +2,23 @@ package com.example.jwttutorial.configuration.security.jwt;
 
 import java.util.Date;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import com.example.jwttutorial.services.UserDetailsImpl;
-import com.example.jwttutorial.model.User;
-import io.jsonwebtoken.security.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.WebUtils;
 
-import io.jsonwebtoken.*;
+import com.example.jwttutorial.model.User;
+import com.example.jwttutorial.services.UserDetailsImpl;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class JwtUtils {
@@ -88,9 +91,10 @@ public class JwtUtils {
     }
 
     private String getCookieValueByName(HttpServletRequest request, String name) {
-        Cookie cookie = WebUtils.getCookie(request, name);
-        if (cookie != null) {
-            return cookie.getValue();
+        // Cookie cookie = WebUtils.getCookie(request, name);
+        String jwt = request.getHeader("Authorization");
+        if (jwt != null) {
+            return jwt;
         } else {
             return null;
         }

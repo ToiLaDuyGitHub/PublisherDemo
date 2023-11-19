@@ -8,9 +8,23 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.jwttutorial.configuration.security.jwt.JwtUtils;
-import com.example.jwttutorial.services.RefreshTokenService;
-import com.example.jwttutorial.services.UserDetailsImpl;
 import com.example.jwttutorial.exception.TokenRefreshException;
 import com.example.jwttutorial.model.RefreshToken;
 import com.example.jwttutorial.model.Role;
@@ -23,23 +37,11 @@ import com.example.jwttutorial.payload.response.UserInfoResponse;
 import com.example.jwttutorial.repository.PrivilegeRepository;
 import com.example.jwttutorial.repository.RoleRepository;
 import com.example.jwttutorial.repository.UserRepository;
-
 import com.example.jwttutorial.repository.UsersRoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.jwttutorial.services.RefreshTokenService;
+import com.example.jwttutorial.services.UserDetailsImpl;
 
+@CrossOrigin(origins = "http://localhost:3070/", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -93,8 +95,7 @@ public class AuthController {
                 userDetails.getUsername(),
                 userDetails.getEnable(),
                 userDetails.getAccount_non_lock(),
-                roles
-        );
+                roles);
 
         // add information of jwtCookie into userInfoResponse
         userInfoResponse.setJwtCookieValue(jwtCookie.getValue());
@@ -104,7 +105,6 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                 .body(userInfoResponse);
     }
-
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -121,8 +121,7 @@ public class AuthController {
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()),
                 signUpRequest.getEnable(),
-                signUpRequest.getAccount_non_lock()
-        );
+                signUpRequest.getAccount_non_lock());
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<UsersRole> usersRoles = new HashSet<>();
